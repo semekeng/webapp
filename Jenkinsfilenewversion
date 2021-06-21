@@ -1,0 +1,22 @@
+pipeline {
+    agent {
+        label "master"
+        //label "my-slave"
+    }
+    stages {
+        stage('Git Checkout'){
+            steps {
+                git credentialsId: 'jenGitHub', url: 'https://github.com/Technicalcourses2021/webapp.git'
+            }
+        }
+        stage('Maven Configuration'){
+            steps {
+                withMaven(maven: 'M2_HOME') {
+                    sh "mvn clean install package"
+                }
+            }
+            
+        }
+        
+    }
+}
