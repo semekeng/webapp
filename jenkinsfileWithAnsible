@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+    tools {
+        maven 'M2_HOME'
+    }
+    environment {
+        DOCKER_TAG = "getVersion()"
+    }
+    stages {
+        stage('SCM') {
+            steps {
+               git credentialsId: 'jenkinsGHubPwd', url: 'https://github.com/Technicalcourses2021/webapp.git'
+            }
+        }
+        stage('MVN Build') {
+            steps {
+               sh 'mvn clean install package'
+            }
+        }
+        stage('Docker Build') {
+            steps {
+               sh 'docker build -t sudheer10thota/webapp:0.0.1 .'
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([string(credentialsId: 'jenkinsDPwd', variable: 'jenkinshubpwd')]) {
+                    sh "docker login -u sudheer10thota -p ${jenkinshubpwd}"
+                }
+                sh 'docker push sudheer10thota/webapp:0.0.1'
+            }
+        }
+        stage('Docker Deploy through ansible') {
+            steps {
+                ansiblePlaybook credentialsId: 'dev-serverAnsible', disableHostKeyChecking: true, installation: 'ansible', inventory: 'dev.inv', playbook: 'deploy-docker.yml'
+            }
+               
+        }
+    }
+}
+
+def getVersion(){
+    def commitHash = sh label: '', returnStdout: true, script: 'git rev-parse --short HEAD'
+    return commitHash
+}
