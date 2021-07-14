@@ -6,11 +6,11 @@
       apt:
         name: python-pip
         state: present
-    - name: Install docker
+    - name: Install docker.
       apt: 
-        name: install docker.io
+        name: docker-ce
         state: present
-    - name: start docker
+    - name: Start docker service
       service:
         name: docker
         state: started
