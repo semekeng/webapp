@@ -7,7 +7,7 @@
         name: python-pip
         state: present
     - name: Install docker
-      apt:
+      apt: install docker.io
         name: docker
         state: present
     - name: start docker
