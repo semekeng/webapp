@@ -7,6 +7,6 @@ metadata:
 spec:
   containers:
     - name: webapp
-      image: sudheer10thota\webapp:v1
+      image: sudheer10thota\webapp:tagVersion
       ports:
         - containerPort: 8080
