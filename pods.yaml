@@ -9,4 +9,4 @@ spec:
     - name: webapp
       image: sudheer10thota\webapp:tagVersion
       ports:
-        - containerPort: 8080
+        - containerPort: 9080
