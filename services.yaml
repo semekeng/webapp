@@ -1,4 +1,17 @@
 apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp
+  labels:
+    app: webapp
+spec:
+  containers:
+    - name: webapp
+      image: sudheer10thota\webapp:tagVersion
+      ports:
+        - containerPort: 9080
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: webapp
