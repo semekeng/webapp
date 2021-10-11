@@ -14,7 +14,32 @@
         <artifactId>servlet-api</artifactId>
         <version>2.5</version>
       </dependency>
+      
+      <dependency>
+        <groupId>io.jenkins.tools.bom</groupId>
+        <artifactId>bom-2.164.x</artifactId>
+        <version>10</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      
+      <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+      <version>${jackson.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.yaml</groupId>
+          <artifactId>snakeyaml</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
 
+    <dependency>
+      <groupId>io.jenkins.plugins</groupId>
+      <artifactId>snakeyaml-api</artifactId>
+    </dependency>
+      
       <dependency>
         <groupId>javax.servlet.jsp</groupId>
         <artifactId>jsp-api</artifactId>
