@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+    tools {
+        maven 'M2_HOME'
+    }
+    environment {
+       DOCKER_TAG = getDockerTag()
+    }
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        stage('continuous Download'){
+            steps {
+                git 'https://github.com/Technicalcourses2021/webapp.git'
+            }
+        }
+        stage('mvn build') {
+            steps {
+                sh 'mvn clean install package'
+            }
+        }
+        stage('Docker Build') {
+            steps {
+               sh "docker build . -t sudheer10thota/webapp:${DOCKER_TAG}"
+            }
+        }
+        stage('push image to docker hub'){
+            steps {
+                withCredentials([string(credentialsId: 'dockerhubpwd', variable: 'dockerHpwd')]) {
+                    sh 'docker login -u sudheer10thota -p ${dockerHpwd}'
+                    sh 'docker push sudheer10thota/webapp:${DOCKER_TAG}'
+                }
+            }
+        }
+        stage("Deploy To Kuberates Cluster"){
+            steps {
+                sh 'chmod +x changeTag.sh'
+                sh './changeTag.sh ${DOCKER_TAG}'
+                sshagent(['k8sd']) {
+                    sh 'scp -o StrictHostKeyChecking=no services.yaml ubuntu@3.109.201.205:/home/ubuntu/'
+                    script{
+                         try{
+                          sh "ssh ubuntu@3.109.201.205 kubectl apply -f services.yaml"
+                       }catch(error){
+                          sh "ssh ubuntu@3.109.201.205 kubectl create -f services.yaml"                        
+                       }
+                    } 
+                }
+            }
+        }
+    }
+}
+
+def getDockerTag(){
+   def tag = sh script: 'git rev-parse HEAD', returnStdout: true
+   return tag
+}
