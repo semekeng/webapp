@@ -25,10 +25,8 @@ apiVersion: v1
 metadata:
   name: webapp
 spec:
-  type: LoadBalancer
   selector:
     app: nginx-deployment-01
   ports:
-  - protocol: TCP
-    port: 80
+  - port: 80
     targetPort: 9090
