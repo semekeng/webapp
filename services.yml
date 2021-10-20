@@ -14,7 +14,7 @@ spec:
         app: deployment-pod
     spec:
       containers:
-      - image: sudheer10thota\webapp:${DOCKER_TAG}
+      - image: sudheer10thota/webapp:${DOCKER_TAG}
         name: webapp
         ports:
         - containerPort: 8090
